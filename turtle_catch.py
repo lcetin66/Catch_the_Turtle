@@ -12,36 +12,36 @@ t2 = turtle.Turtle() # skor yazısı için ayrı turtle
 t2.hideturtle()
 t2.penup()
 
-ttime = turtle.Turtle()
+ttime = turtle.Turtle() # timer için ayrı turtle
 ttime.hideturtle()
 ttime.penup()
 
 x_c = 0
 y_c = 0
 
-def random_coordinate():
+def random_coordinate(): #Random x ve y koordinati üretiyor
     global x_c, y_c, ready
     x_c = random.randint(-400, 400)
     y_c = random.randint(-200, 300)
     ready = True
     return x_c, y_c
 
-score = 0  # Baslangic skoru
+score = 0  # Baslangıç skoru
 running = True
-ready = False  # Koordinatlar
-seconds = int(30)
+ready = False  # Koordinatlar hazırlanana kadar beklemesi için
+seconds = int(30) # Kac saniyeden geri sayilacagi
 remain = seconds
 
 t.shape("turtle")
 t.color("green")
 
-t2.goto(-380, 380)
+t2.goto(-380, 380) # skorun pozisyonu
 t2.write("Skor: "+ str(score), font=("Arial", 20, "bold"), align="left")
 
-ttime.goto(-250, 380)
+ttime.goto(-250, 380) # geri sayım aracının pozisyonu
 ttime.write("Time: " + str(remain), font=("Arial", 20, "bold"), align="left")
 
-def time_countdown():
+def time_countdown(): # geri sayım fonksiyonu
     global seconds, running
 
     if seconds > 0:
@@ -52,7 +52,7 @@ def time_countdown():
     else:
         running = False
 
-def click_turtle(x, y):
+def click_turtle(x, y): # turtle'in üstüne tıklama fonksiyonu
     global running, ready, score
 
     if not running:
@@ -73,9 +73,10 @@ def click_turtle(x, y):
     except TypeError:
         pass
 
-drawing_screen.onclick(click_turtle)
-time_countdown()
+drawing_screen.onclick(click_turtle) # Turtle'in üstüne tıklama fonksiyonunu aktif ediyor
+time_countdown() # geri sayima basliyor
 
+turtle_show_again = float(0.55) # görünüm sıklığı
 while seconds > 0:
     if not running:
         break
@@ -84,6 +85,6 @@ while seconds > 0:
     rnd_x, rnd_y = random_coordinate()
     t.goto(rnd_x, rnd_y)
     t.showturtle()
-    time.sleep(0.55)
+    time.sleep(turtle_show_again)
 
 turtle.done()
