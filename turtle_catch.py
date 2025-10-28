@@ -4,40 +4,20 @@ drawing_screen = turtle.Screen()
 drawing_screen.bgcolor("light blue")
 drawing_screen.title("Catch the Turtle")
 
-score = 0  # Baslangic skoru
-running = True
-x_c = 0
-y_c = 0
-ready = False  # Koordinatlar
-seconds = int(30)
-remain = seconds
-
 t = turtle.Turtle()
-t.shape("turtle")
-t.color("green")
+t.hideturtle()
 t.penup()
 
-t2 = turtle.Turtle()   # skor yazısı için ayrı turtle
+t2 = turtle.Turtle() # skor yazısı için ayrı turtle
 t2.hideturtle()
 t2.penup()
-t2.goto(-380, 380)
-t2.write("Skor: "+ str(score), font=("Arial", 20, "bold"), align="left")
 
-ttime = turtle.Turtle() # skor için ayrı turtle
+ttime = turtle.Turtle()
 ttime.hideturtle()
 ttime.penup()
-ttime.goto(-250, 380)
-ttime.write("Time: " + str(remain), font=("Arial", 20, "bold"), align="left")
 
-def time_countdown():
-    global seconds, running
-    if seconds > 0:
-        seconds -= 1
-        ttime.clear()
-        ttime.write("Time: " + str(seconds), font=("Arial", 20, "bold"), align="left")
-        drawing_screen.ontimer(time_countdown, 1000)
-    else:
-        running = False
+x_c = 0
+y_c = 0
 
 def random_coordinate():
     global x_c, y_c, ready
@@ -46,8 +26,37 @@ def random_coordinate():
     ready = True
     return x_c, y_c
 
+score = 0  # Baslangic skoru
+running = True
+ready = False  # Koordinatlar
+seconds = int(30)
+remain = seconds
+
+t.shape("turtle")
+t.color("green")
+
+t2.goto(-380, 380)
+t2.write("Skor: "+ str(score), font=("Arial", 20, "bold"), align="left")
+
+ttime.goto(-250, 380)
+ttime.write("Time: " + str(remain), font=("Arial", 20, "bold"), align="left")
+
+def time_countdown():
+    global seconds, running
+
+    if seconds > 0:
+        seconds -= 1
+        ttime.clear()
+        ttime.write("Time: " + str(seconds), font=("Arial", 20, "bold"), align="left")
+        drawing_screen.ontimer(time_countdown, 1000)
+    else:
+        running = False
+
 def click_turtle(x, y):
     global running, ready, score
+
+    if not running:
+        return
     if not ready:
         return
     try:
@@ -75,6 +84,6 @@ while seconds > 0:
     rnd_x, rnd_y = random_coordinate()
     t.goto(rnd_x, rnd_y)
     t.showturtle()
-    time.sleep(0.6)
+    time.sleep(0.55)
 
 turtle.done()
