@@ -1,12 +1,16 @@
-import turtle
-import random
-import time
+import turtle, random, time
 
 drawing_screen = turtle.Screen()
 drawing_screen.bgcolor("light blue")
 drawing_screen.title("Catch the Turtle")
 
 score = 0  # Baslangic skoru
+running = True
+x_c = 0
+y_c = 0
+ready = False  # Koordinatlar
+seconds = int(30)
+remain = seconds
 
 t = turtle.Turtle()
 t.shape("turtle")
@@ -19,10 +23,21 @@ t2.penup()
 t2.goto(-380, 380)
 t2.write("Skor: "+ str(score), font=("Arial", 20, "bold"), align="left")
 
-running = True
-x_c = 0
-y_c = 0
-ready = False  # koordinatlar hazır mı
+ttime = turtle.Turtle() # skor için ayrı turtle
+ttime.hideturtle()
+ttime.penup()
+ttime.goto(-250, 380)
+ttime.write("Time: " + str(remain), font=("Arial", 20, "bold"), align="left")
+
+def time_countdown():
+    global seconds, running
+    if seconds > 0:
+        seconds -= 1
+        ttime.clear()
+        ttime.write("Time: " + str(seconds), font=("Arial", 20, "bold"), align="left")
+        drawing_screen.ontimer(time_countdown, 1000)
+    else:
+        running = False
 
 def random_coordinate():
     global x_c, y_c, ready
@@ -50,8 +65,9 @@ def click_turtle(x, y):
         pass
 
 drawing_screen.onclick(click_turtle)
+time_countdown()
 
-for i in range(20):
+while seconds > 0:
     if not running:
         break
     t.clear()
@@ -59,6 +75,6 @@ for i in range(20):
     rnd_x, rnd_y = random_coordinate()
     t.goto(rnd_x, rnd_y)
     t.showturtle()
-    time.sleep(3)
+    time.sleep(0.6)
 
 turtle.done()
