@@ -8,75 +8,83 @@ t = turtle.Turtle()
 t.hideturtle()
 t.penup()
 
-t2 = turtle.Turtle() # skor yazısı için ayrı turtle
+t2 = turtle.Turtle()  # skor yazısı
 t2.hideturtle()
 t2.penup()
 
-ttime = turtle.Turtle() # timer için ayrı turtle
+ttime = turtle.Turtle()  # zaman yazısı
 ttime.hideturtle()
 ttime.penup()
 
 x_c = 0
 y_c = 0
+score = 0
+running = True
+ready = False
+seconds = 30
 
-def random_coordinate(): #Random x ve y koordinati üretiyor
+def update_positions():
+    screen_h = drawing_screen.window_height() / 2
+    screen_w = drawing_screen.window_width() / 2
+
+    # Skor: sol üst
+    t2.goto(-screen_w + 40, screen_h - 40)
+    # Zaman: sağ üst
+    ttime.goto(screen_w - 160, screen_h - 40)
+
+
+def random_coordinate():  # rastgele konum üretir
     global x_c, y_c, ready
-    x_c = random.randint(-400, 400)
-    y_c = random.randint(-200, 300)
+    screen_h = drawing_screen.window_height() / 2 * 0.9
+    screen_w = drawing_screen.window_width() / 2 * 0.9
+    x_c = random.randint(-int(screen_w), int(screen_w))
+    y_c = random.randint(-int(screen_h), int(screen_h))
     ready = True
     return x_c, y_c
 
-score = 0  # Baslangıç skoru
-running = True
-ready = False  # Koordinatlar hazırlanana kadar beklemesi için
-seconds = int(30) # Kac saniyeden geri sayilacagi
-remain = seconds
 
-t.shape("turtle")
-t.color("green")
+def player_score():  # skor güncelleme
+    t2.clear()
+    update_positions()
+    t2.write(f"Skor: {score}", font=("Arial", 20, "bold"), align="left")
 
-t2.goto(-380, 380) # skorun pozisyonu
-t2.write("Skor: "+ str(score), font=("Arial", 20, "bold"), align="left")
 
-ttime.goto(-250, 380) # geri sayım aracının pozisyonu
-ttime.write("Time: " + str(remain), font=("Arial", 20, "bold"), align="left")
-
-def time_countdown(): # geri sayım fonksiyonu
+def time_countdown():  # geri sayım fonksiyonu
     global seconds, running
-
+    update_positions()
     if seconds > 0:
         seconds -= 1
         ttime.clear()
-        ttime.write("Time: " + str(seconds), font=("Arial", 20, "bold"), align="left")
+        ttime.write(f"Time: {seconds}", font=("Arial", 20, "bold"), align="left")
         drawing_screen.ontimer(time_countdown, 1000)
     else:
         running = False
 
-def click_turtle(x, y): # turtle'in üstüne tıklama fonksiyonu
+
+def click_turtle(x, y):  # tıklama kontrolü
     global running, ready, score
-
-    if not running:
+    if not running or not ready:
         return
-    if not ready:
-        return
-    try:
-        if abs(x_c - x) < 20 and abs(y_c - y) < 20:
-            old_color = t.pencolor()
-            t.color("red")
-            t.write("Vurdun!", align="center", font=("Arial", 16, "bold"))
-            t.color(old_color)
-            score += 1
-            t2.clear()
-            t2.write(f"Skor: {score}", font=("Arial", 20, "bold"))
-        else:
-            t.write("Iskaladın!", align="center", font=("Arial", 16, "bold"))
-    except TypeError:
-        pass
+    if abs(x_c - x) < 20 and abs(y_c - y) < 20:
+        old_color = t.pencolor()
+        t.color("red")
+        t.write("Vurdun!", align="center", font=("Arial", 16, "bold"))
+        t.color(old_color)
+        score += 1
+        player_score()
+    else:
+        t.write("Iskaladın!", align="center", font=("Arial", 16, "bold"))
 
-drawing_screen.onclick(click_turtle) # Turtle'in üstüne tıklama fonksiyonunu aktif ediyor
-time_countdown() # geri sayima basliyor
 
-turtle_show_again = float(0.55) # görünüm sıklığı
+drawing_screen.onclick(click_turtle)
+update_positions()
+player_score()
+time_countdown()
+
+t.shape("turtle")
+t.color("green")
+
+turtle_show_again = 0.55  # görünme aralığı (saniye)
 while seconds > 0:
     if not running:
         break
