@@ -8,11 +8,11 @@ t = turtle.Turtle()
 t.hideturtle()
 t.penup()
 
-t2 = turtle.Turtle()  # skor yazısı
+t2 = turtle.Turtle()  # score 
 t2.hideturtle()
 t2.penup()
 
-ttime = turtle.Turtle()  # zaman yazısı
+ttime = turtle.Turtle()  # time
 ttime.hideturtle()
 ttime.penup()
 
@@ -27,13 +27,13 @@ def update_positions():
     screen_h = drawing_screen.window_height() / 2
     screen_w = drawing_screen.window_width() / 2
 
-    # Skor: sol üst
+    # Score: top left
     t2.goto(-screen_w + 40, screen_h - 40)
-    # Zaman: sağ üst
+    # Time: top right
     ttime.goto(screen_w - 160, screen_h - 40)
 
 
-def random_coordinate():  # rastgele konum üretir
+def random_coordinate():  # random position
     global x_c, y_c, ready
     screen_h = drawing_screen.window_height() / 2 * 0.9
     screen_w = drawing_screen.window_width() / 2 * 0.9
@@ -43,13 +43,13 @@ def random_coordinate():  # rastgele konum üretir
     return x_c, y_c
 
 
-def player_score():  # skor güncelleme
+def player_score():  # update score
     t2.clear()
     update_positions()
     t2.write(f"Skor: {score}", font=("Arial", 20, "bold"), align="left")
 
 
-def time_countdown():  # geri sayım fonksiyonu
+def time_countdown():  # coundown function
     global seconds, running
     update_positions()
     if seconds > 0:
@@ -61,7 +61,7 @@ def time_countdown():  # geri sayım fonksiyonu
         running = False
 
 
-def click_turtle(x, y):  # tıklama kontrolü
+def click_turtle(x, y):  # click control
     global running, ready, score
     if not running or not ready:
         return
@@ -84,7 +84,7 @@ time_countdown()
 t.shape("turtle")
 t.color("green")
 
-turtle_show_again = 0.55  # görünme aralığı (saniye)
+turtle_show_again = 0.55  #visibility interval (seconds)
 while seconds > 0:
     if not running:
         break
